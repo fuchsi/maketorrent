@@ -1,0 +1,21 @@
+[package]
+name = "maketorrent"
+version = "0.1.0"
+authors = ["Daniel Müller <perlfuchsi@gmail.com>"]
+description = "A Bittorrent meta file generator"
+license = "GPL-3.0-or-later"
+
+[dependencies]
+bip_metainfo = "0.12"
+pbr = "1.0.0"
+num_cpus = "1.0"
+
+[dependencies.clap]
+version = "2.31"
+default-features = false
+
+# Cherry-pick the features you'd like to use
+features = [ "color" ]
+
+[profile.release]
+lto = true
