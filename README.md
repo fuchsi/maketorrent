@@ -21,7 +21,7 @@ OPTIONS:
     -v, --verbose              Explain what is being done.
 
 ARGS:
-    <source directory or filename> 
+    <source directory or filename>
 ```
 
 ## Installation
