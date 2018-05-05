@@ -22,7 +22,7 @@ extern crate num_cpus;
 extern crate pbr;
 
 use std::fs::File;
-use std::io::Write;
+use std::io::{self, Write};
 use std::path::Path;
 use std::process;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -127,6 +127,12 @@ fn main() {
     };
 
     let creator = format!("{}/{}", crate_name!(), crate_version!());
+
+    // Tracker groups
+    let trackers = announce_urls.into_iter().map(|v| v.to_owned()).collect();
+    let groups: Vec<Vec<String>> = vec![trackers];
+    let trackers = &groups[0];
+
     let mut builder = MetainfoBuilder::new()
         .set_created_by(Some(&creator))
         .set_comment(comment);
@@ -136,11 +142,12 @@ fn main() {
     if !no_date {
         builder = builder.set_creation_date(Some(time()));
     }
-    builder = builder.set_main_tracker(Some(announce_urls[0]));
-    /* TODO: Multiple announce urls
-    for url in announce_urls {
+    builder = builder.set_main_tracker(trackers.get(0).map(|t| &t[..]));
 
-    }*/
+    if trackers.len() > 1 {
+        builder = builder.set_trackers(Some(&groups));
+    }
+
     if piece_length == 0 {
         builder = builder.set_piece_length(PieceLength::OptBalanced);
         piece_length = 512 * 1024;
@@ -156,7 +163,7 @@ fn main() {
 
     if verbose {
         println!("Options:");
-        println!("  Announce URL:  {}", announce_urls[0]);
+        println!("  Announce URL:  {}", trackers[0]);
         println!("  Torrent Name:  {}", name);
         println!("  Metafile:      {}", output);
         println!("  Piece Length:  {}", piece_length);
@@ -168,10 +175,18 @@ fn main() {
         println!("  Threads:       {}", threads);
     }
 
-    match f(builder, &path, threads) {
+    match f(builder, &path, threads, piece_length) {
         Ok(bytes) => {
+            let stdout = io::stdout();
+            let mut handle = stdout.lock();
+            write!(handle, "writing metainfo file...").unwrap();
+            handle.flush().unwrap();
+
             let mut output_file = File::create(output).unwrap();
             output_file.write_all(&bytes).unwrap();
+
+            writeln!(handle, "done").unwrap();
+            handle.flush().unwrap();
         },
         Err(e) => {
             eprintln!("Error With Input: {:?}", e);
@@ -185,7 +200,7 @@ fn time() -> i64 {
     SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs() as i64
 }
 
-fn create_torrent<S>(builder: MetainfoBuilder, source: S, threads: usize) -> ParseResult<Vec<u8>>
+fn create_torrent<S>(builder: MetainfoBuilder, source: S, threads: usize, _piece_length: u32) -> ParseResult<Vec<u8>>
     where S: AsRef<Path>
 {
     let total_size = total_size(&source);
@@ -205,10 +220,23 @@ fn create_torrent<S>(builder: MetainfoBuilder, source: S, threads: usize) -> Par
     })
 }
 
-fn create_torrent_silent<S>(builder: MetainfoBuilder, source: S, threads: usize) -> ParseResult<Vec<u8>>
+fn create_torrent_silent<S>(builder: MetainfoBuilder, source: S, threads: usize, piece_length: u32) -> ParseResult<Vec<u8>>
     where S: AsRef<Path>
 {
-    builder.build(threads, source, |_p| {})
+    let total_size = total_size(&source);
+    let pieces = total_size / piece_length as u64;
+
+    let stdout = io::stdout();
+
+    let res = builder.build(threads, source, move |progress| {
+        let hashed = (progress * pieces as f64) as u64;
+
+        let mut handle = stdout.lock();
+        write!(handle, "Hashed {} of {} pieces\r", hashed, pieces).unwrap();
+        handle.flush().unwrap();
+    });
+    println!();
+    res
 }
 
 fn total_size<P: AsRef<Path>>(path: P) -> u64

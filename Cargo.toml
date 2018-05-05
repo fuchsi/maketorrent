@@ -4,10 +4,12 @@ version = "0.1.1"
 authors = ["Daniel Müller <perlfuchsi@gmail.com>"]
 description = "A Bittorrent meta file generator"
 license = "GPL-3.0+"
-repository = "https://github.com/fuchsi/maketorrent.git"
+repository = "https://github.com/fuchsi/maketorrent"
+readme = "README.md"
+categories = ["command-line-utilities"]
+keywords = ["torrent", "bencode"]
 
 [dependencies]
-bip_metainfo = "0.12"
 pbr = "1.0.0"
 num_cpus = "1.0"
 
@@ -15,11 +17,11 @@ num_cpus = "1.0"
 version = "2.31"
 default-features = false
 
-# Cherry-pick the features you'd like to use
 features = [ "color" ]
 
-[patch.crates-io]
-bip_metainfo = { path = "bip_metainfo" }
+[dependencies.bip_metainfo ]
+path = "bip_metainfo"
+version = "0.12.0"
 
 [profile.release]
 lto = true
