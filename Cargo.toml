@@ -1,6 +1,6 @@
 [package]
 name = "maketorrent"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Daniel Müller <perlfuchsi@gmail.com>"]
 description = "A Bittorrent meta file generator"
 license = "GPL-3.0+"
@@ -17,6 +17,9 @@ default-features = false
 
 # Cherry-pick the features you'd like to use
 features = [ "color" ]
+
+[patch.crates-io]
+bip_metainfo = { path = "bip_metainfo" }
 
 [profile.release]
 lto = true
