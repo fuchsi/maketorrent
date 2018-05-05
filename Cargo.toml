@@ -21,7 +21,7 @@ features = [ "color" ]
 
 [dependencies.bip_metainfo ]
 path = "bip_metainfo"
-version = "0.12.0"
+#version = "0.12.0"
 
 [profile.release]
 lto = true
