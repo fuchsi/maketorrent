@@ -16,6 +16,7 @@ OPTIONS:
     -o, --output <filename>    Set the path and filename of the Torrent file.[default: <name>.torrent]
     -l, --piece-length <n>     Set the piece length to 2^n Bytes. [default: auto]
     -p, --private              Set the private flag.
+    -s, --source               Add a source string embedded in infohash.
     -t, --threads              Number of threads to use for hashing.[default: number of logical cores]
     -V, --version              Prints version information
     -v, --verbose              Explain what is being done.
@@ -30,7 +31,7 @@ cargo install maketorrent
 ```
 or
 ```bash
-git clone https://github.com/fuchsi/maketorrent.git
+git clone https://gitlab.com/dfuchsi/maketorrent.git
 cd maketorrent
 cargo install
 ```

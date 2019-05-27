@@ -6,6 +6,7 @@ const TRACKER: &'static str = "udp://foo.bar.baz:6969";
 const DATE: i64 = 1517651523851;
 const COMMENT: &'static str = "Foo bar baz";
 const CREATED_BY: &'static str = "Fridge";
+const SOURCE: &'static str = "Some Source";
 
 #[test]
 fn positive_set_trackers() {
@@ -41,6 +42,14 @@ fn positive_set_comment() {
         .set_comment(Some(COMMENT));
 
     assert_eq!(builder.get_comment(), Some(COMMENT.to_string()));
+}
+
+#[test]
+fn positive_set_source() {
+    let builder = MetainfoBuilder::new()
+        .set_source(Some(SOURCE));
+
+    assert_eq!(builder.get_source(), Some(SOURCE.to_string()));
 }
 
 #[test]

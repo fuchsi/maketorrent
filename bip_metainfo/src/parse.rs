@@ -25,6 +25,7 @@ pub const ANNOUNCE_LIST_KEY: &'static [u8] = b"announce-list";
 pub const ANNOUNCE_URL_KEY:  &'static [u8] = b"announce";
 pub const CREATION_DATE_KEY: &'static [u8] = b"creation date";
 pub const COMMENT_KEY:       &'static [u8] = b"comment";
+pub const SOURCE_KEY:        &'static [u8] = b"source";
 pub const CREATED_BY_KEY:    &'static [u8] = b"created by";
 pub const ENCODING_KEY:      &'static [u8] = b"encoding";
 pub const INFO_KEY:          &'static [u8] = b"info";
@@ -77,6 +78,12 @@ pub fn parse_announce_url<'a, B>(root_dict: &'a BDictAccess<B::BKey, B>) -> Opti
 pub fn parse_creation_date<B>(root_dict: &BDictAccess<B::BKey, B>) -> Option<i64>
     where B: BRefAccess {
     CONVERT.lookup_and_convert_int(root_dict, CREATION_DATE_KEY).ok()
+}
+
+/// Parses the source from the root dictionary.
+pub fn parse_source<'a, B>(root_dict: &'a BDictAccess<B::BKey, B>) -> Option<&'a str>
+    where B: BRefAccess + 'a {
+    CONVERT.lookup_and_convert_str(root_dict, SOURCE_KEY).ok()
 }
 
 /// Parses the comment from the root dictionary.

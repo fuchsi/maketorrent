@@ -1,25 +1,25 @@
 [package]
 name = "maketorrent"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Daniel Müller <perlfuchsi@gmail.com>"]
 description = "A Bittorrent meta file generator"
 license = "GPL-3.0+"
-repository = "https://github.com/fuchsi/maketorrent"
+repository = "https://gitlab.com/dfuchsi/maketorrent"
 readme = "README.md"
 categories = ["command-line-utilities"]
 keywords = ["torrent", "bencode"]
 
 [dependencies]
-pbr = "1.0.0"
-num_cpus = "1.0"
+pbr = "1.0.1"
+num_cpus = "1.10.0"
 
 [dependencies.clap]
-version = "2.31"
+version = "2.33.0"
 default-features = false
 
 features = [ "color" ]
 
-[dependencies.bip_metainfo ]
+[dependencies.bip_metainfo]
 path = "bip_metainfo"
 #version = "0.12.0"
 

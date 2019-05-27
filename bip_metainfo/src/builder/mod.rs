@@ -144,6 +144,21 @@ impl<'a> MetainfoBuilder<'a> {
         self
     }
 
+    /// Set or unset a source string for the torrent file.
+    pub fn set_source(mut self, opt_source: Option<&'a str>) -> MetainfoBuilder<'a> {
+        {
+            let dict_access = self.root.dict_mut().unwrap();
+
+            if let Some(source) = opt_source {
+                dict_access.insert(parse::SOURCE_KEY.into(), ben_bytes!(source));
+            } else {
+                dict_access.remove(parse::SOURCE_KEY);
+            }
+        }
+
+        self
+    }
+
     /// Set or unset the created by for the torrent file.
     pub fn set_created_by(mut self, opt_created_by: Option<&'a str>) -> MetainfoBuilder<'a> {
         {
@@ -199,6 +214,13 @@ impl<'a> MetainfoBuilder<'a> {
         let dict_access = self.root.dict().unwrap();
 
         parse::parse_comment(dict_access).map(String::from)
+    }
+
+    /// Get decoded value of source key
+    pub fn get_source(&self) -> Option<String> {
+        let dict_access = self.root.dict().unwrap();
+
+        parse::parse_source(dict_access).map(String::from)
     }
 
     /// Get decoded value of created-by key

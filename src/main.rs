@@ -74,6 +74,11 @@ fn main() {
             .short("p")
             .long("private")
             .help("Set the private flag."))
+        .arg(Arg::with_name("source_str")
+            .short("s")
+            .long("source")
+            .help("Add source string embedded in infohash.")
+            .value_name("source"))
         .arg(Arg::with_name("verbose")
             .short("v")
             .long("verbose")
@@ -102,6 +107,7 @@ fn main() {
     let no_date = matches.is_present("no-date");
     let verbose = matches.is_present("verbose");
     let source = matches.value_of("source").unwrap();
+    let source_str = matches.value_of("source_str");
     let threads: usize = match matches.value_of("threads") {
         Some(t) => t.parse().expect("threads is not a number!"),
         None => num_cpus::get(),
@@ -135,7 +141,8 @@ fn main() {
 
     let mut builder = MetainfoBuilder::new()
         .set_created_by(Some(&creator))
-        .set_comment(comment);
+        .set_comment(comment)
+        .set_source(source_str);
     if private {
         builder = builder.set_private_flag(Some(true));
     }
@@ -171,6 +178,9 @@ fn main() {
             println!("  Comment:       {}", comment);
         }
         println!("  Private:       {}", if private { "yes" } else { "no" });
+        if let Some(source_str) = source_str {
+            println!("  Source:        {}", source_str);
+        }
         println!("  Creation Date: {}", if no_date { "no" } else { "yes" });
         println!("  Threads:       {}", threads);
     }
