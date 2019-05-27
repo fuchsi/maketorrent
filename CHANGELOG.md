@@ -5,6 +5,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.1] - 27.05.2019
+
+### Fixed
+- Moved the source string to the info hash, as it should be
+
 ## [0.2.0] - 27.05.2019
 
 ### Added
