@@ -1,6 +1,6 @@
 [package]
 name = "maketorrent"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Daniel Müller <perlfuchsi@gmail.com>"]
 description = "A Bittorrent meta file generator"
 license = "GPL-3.0+"

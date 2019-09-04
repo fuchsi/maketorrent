@@ -254,9 +254,12 @@ impl<'a> InfoBuilder<'a> {
 
         {
             let dict_access = self.info.dict_mut().unwrap();
-            opt_numeric_is_private
-                .and_then(|numeric_is_private| dict_access.insert(parse::PRIVATE_KEY.into(), ben_int!(numeric_is_private)))
-                .or_else(|| dict_access.remove(parse::PRIVATE_KEY));
+            
+            if let Some(numeric_is_private) = opt_numeric_is_private {
+                dict_access.insert(parse::PRIVATE_KEY.into(), ben_int!(numeric_is_private));
+            } else {
+                dict_access.remove(parse::PRIVATE_KEY);
+            }
         }
 
         self
